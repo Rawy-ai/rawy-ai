@@ -97,7 +97,6 @@ const getSafetyFeatures = (lang: Language) => [
   { title: lang === 'en' ? 'Age-Appropriate Content' : 'محتوى مناسب للعمر', desc: lang === 'en' ? 'All stories are designed for ages 9-15 with appropriate themes and complexity.' : 'جميع القصص مصممة للأعمار 9-15 مع مواضيع وتعقيد مناسب.', icon: '👶' },
   { title: lang === 'en' ? 'Values-Aligned' : 'متوافق مع القيم', desc: lang === 'en' ? 'Content reflects Islamic values and Arab cultural norms. No harmful or inappropriate elements.' : 'المحتوى يعكس القيم الإسلامية والأعراف الثقافية العربية. لا عناصر ضارة أو غير مناسبة.', icon: '🕌' },
   { title: lang === 'en' ? 'No Personal Data Collection' : 'لا جمع بيانات شخصية', desc: lang === 'en' ? 'We only collect minimal account information. Stories are private by default.' : 'نجمع معلومات الحساب الضرورية فقط. القصص خاصة بشكل افتراضي.', icon: '🔒' },
-  { title: lang === 'en' ? 'Parent Controls' : 'تحكم الوالدين', desc: lang === 'en' ? 'Parents can review story history and manage account settings at any time.' : 'يمكن للآباء مراجعة سجل القصص وإدارة إعدادات الحساب في أي وقت.', icon: '👨‍👩‍👧' },
 ];
 
 export default function VisionPage() {
