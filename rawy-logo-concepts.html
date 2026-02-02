@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rawy Logo Concepts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f5f5;
+      padding: 40px 20px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #1a1a2e;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 40px;
+    }
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .concept-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .concept-card h3 {
+      font-size: 18px;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+    .concept-card p {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .logo-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .logo-preview.light { background: #f8f9fc; }
+    .logo-preview.dark { background: #1a1a2e; }
+    .logo-preview.gradient { background: linear-gradient(135deg, #6366F1, #8B5CF6); }
+    .variations {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .variation {
+      padding: 16px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rawy Logo Concepts</h1>
+  <p class="subtitle">5 unique logo directions for your Arabic storytelling platform</p>
+
+  <div class="concepts-grid">
+
+    <!-- Concept 1: Modern Geometric -->
+    <div class="concept-card">
+      <h3>Concept 1: Modern Geometric</h3>
+      <p>A clean, modern "R" mark with geometric shapes. Professional and tech-forward, perfect for a serious startup identity.</p>
+
+      <div class="logo-preview light">
+        <svg width="200" height="80" viewBox="0 0 200 80">
+          <!-- Icon -->
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#6366F1"/>
+              <stop offset="100%" style="stop-color:#8B5CF6"/>
+            </linearGradient>
+          </defs>
+          <rect x="10" y="15" width="50" height="50" rx="12" fill="url(#grad1)"/>
+          <path d="M25 30 L45 30 Q50 30 50 35 L50 40 Q50 45 45 45 L35 45 L50 55 L42 55 L27 45 L27 55 L25 55 Z" fill="white"/>
+          <text x="75" y="52" font-family="Segoe UI, sans-serif" font-size="32" font-weight="700" fill="#1a1a2e">Rawy</text>
+        </svg>
+      </div>
+
+      <div class="variations">
+        <div class="variation" style="background: #1a1a2e;">
+          <svg width="40" height="40" viewBox="0 0 50 50">
+            <rect width="50" height="50" rx="12" fill="url(#grad1)"/>
+            <path d="M12 15 L32 15 Q38 15 38 21 L38 26 Q38 32 32 32 L22 32 L38 42 L30 42 L14 32 L14 42 L12 42 Z" fill="white"/>
+          </svg>
+          <span style="color: white; font-weight: 600;">Rawy</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concept 2: Book & Quill -->
+    <div class="concept-card">
+      <h3>Concept 2: Story Book</h3>
+      <p>An open book with a magical glow, representing the wonder of storytelling. Warm and inviting for young authors.</p>
+
+      <div class="logo-preview light">
+        <svg width="200" height="80" viewBox="0 0 200 80">
+          <defs>
+            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#8B5CF6"/>
+              <stop offset="100%" style="stop-color:#EC4899"/>
+            </linearGradient>
+          </defs>
+          <!-- Book icon -->
+          <rect x="10" y="15" width="50" height="50" rx="12" fill="url(#grad2)"/>
+          <!-- Book pages -->
+          <path d="M20 25 Q35 22 35 40 L35 55 Q35 38 20 40 Z" fill="white" opacity="0.9"/>
+          <path d="M50 25 Q35 22 35 40 L35 55 Q35 38 50 40 Z" fill="white" opacity="0.7"/>
+          <!-- Stars -->
+          <circle cx="28" cy="32" r="2" fill="#FCD34D"/>
+          <circle cx="42" cy="28" r="1.5" fill="#FCD34D"/>
+          <text x="75" y="52" font-family="Segoe UI, sans-serif" font-size="32" font-weight="700" fill="#1a1a2e">Rawy</text>
+        </svg>
+      </div>
+
+      <div class="variations">
+        <div class="variation" style="background: linear-gradient(135deg, #8B5CF6, #EC4899);">
+          <svg width="40" height="40" viewBox="0 0 50 50">
+            <rect width="50" height="50" rx="12" fill="white"/>
+            <path d="M10 12 Q25 9 25 27 L25 42 Q25 25 10 27 Z" fill="#8B5CF6"/>
+            <path d="M40 12 Q25 9 25 27 L25 42 Q25 25 40 27 Z" fill="#EC4899"/>
+            <circle cx="18" cy="19" r="2" fill="#FCD34D"/>
+            <circle cx="32" cy="15" r="1.5" fill="#FCD34D"/>
+          </svg>
+          <span style="color: white; font-weight: 600;">Rawy</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concept 3: Arabic Calligraphy Inspired -->
+    <div class="concept-card">
+      <h3>Concept 3: Arabic Heritage</h3>
+      <p>Modern interpretation with Arabic calligraphy elements. Celebrates cultural identity while staying contemporary.</p>
+
+      <div class="logo-preview dark">
+        <svg width="200" height="80" viewBox="0 0 200 80">
+          <defs>
+            <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#F59E0B"/>
+              <stop offset="100%" style="stop-color:#D97706"/>
+            </linearGradient>
+          </defs>
+          <!-- Arabic-inspired R -->
+          <rect x="10" y="15" width="50" height="50" rx="14" fill="url(#grad3)"/>
+          <path d="M22 28 C22 28 25 25 35 25 C42 25 45 30 45 35 C45 40 42 43 35 43 L30 43 L45 55 L35 55 L22 43 L22 55 L22 28"
+                fill="white" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <!-- Arabic dot accent -->
+          <circle cx="38" cy="48" r="3" fill="white"/>
+
+          <text x="75" y="52" font-family="Segoe UI, sans-serif" font-size="32" font-weight="700" fill="white">Rawy</text>
+          <text x="75" y="68" font-family="Tajawal, sans-serif" font-size="14" fill="#888">راوي</text>
+        </svg>
+      </div>
+
+      <div class="variations">
+        <div class="variation" style="background: #F59E0B;">
+          <svg width="40" height="40" viewBox="0 0 50 50">
+            <rect width="50" height="50" rx="14" fill="white"/>
+            <path d="M12 18 C12 18 15 15 25 15 C32 15 35 20 35 25 C35 30 32 33 25 33 L20 33 L35 45 L25 45 L12 33 L12 45 L12 18"
+                  fill="#D97706" stroke="#D97706" stroke-width="2"/>
+            <circle cx="28" cy="38" r="3" fill="#D97706"/>
+          </svg>
+          <span style="color: white; font-weight: 700;">راوي</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concept 4: Playful & Young -->
+    <div class="concept-card">
+      <h3>Concept 4: Playful Studio</h3>
+      <p>Fun, creative marks that appeal to young audiences. Uses bright colors and playful shapes for the Story Studio brand.</p>
+
+      <div class="logo-preview gradient">
+        <svg width="200" height="80" viewBox="0 0 200 80">
+          <!-- Playful icon -->
+          <circle cx="35" cy="40" r="30" fill="white"/>
+          <text x="22" y="52" font-family="Segoe UI, sans-serif" font-size="36" font-weight="800" fill="#8B5CF6">R</text>
+          <!-- Sparkle accents -->
+          <path d="M55 20 L57 25 L62 27 L57 29 L55 34 L53 29 L48 27 L53 25 Z" fill="#FCD34D"/>
+          <circle cx="15" cy="55" r="4" fill="#EC4899" opacity="0.8"/>
+          <circle cx="58" cy="50" r="3" fill="#22D3EE" opacity="0.8"/>
+
+          <text x="80" y="50" font-family="Segoe UI, sans-serif" font-size="30" font-weight="800" fill="white">Rawy</text>
+          <text x="80" y="66" font-family="Segoe UI, sans-serif" font-size="12" font-weight="600" fill="rgba(255,255,255,0.8)">STORY STUDIO</text>
+        </svg>
+      </div>
+
+      <div class="variations">
+        <div class="variation" style="background: #f0f4ff;">
+          <svg width="44" height="44" viewBox="0 0 50 50">
+            <circle cx="25" cy="25" r="24" fill="linear-gradient(135deg, #6366F1, #8B5CF6)" stroke="#6366F1" stroke-width="2"/>
+            <text x="12" y="35" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800" fill="#6366F1">R</text>
+            <path d="M38 12 L40 17 L45 19 L40 21 L38 26 L36 21 L31 19 L36 17 Z" fill="#FCD34D"/>
+          </svg>
+          <span style="color: #6366F1; font-weight: 700;">Rawy</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concept 5: Minimal & Clean -->
+    <div class="concept-card">
+      <h3>Concept 5: Minimal Tech</h3>
+      <p>Ultra-clean, minimal design that works at any size. Perfect for app icons and professional contexts.</p>
+
+      <div class="logo-preview light">
+        <svg width="200" height="80" viewBox="0 0 200 80">
+          <!-- Simple rounded square with R -->
+          <rect x="10" y="15" width="50" height="50" rx="16" fill="#1a1a2e"/>
+          <text x="22" y="52" font-family="Segoe UI, sans-serif" font-size="32" font-weight="700" fill="white">R</text>
+
+          <text x="75" y="48" font-family="Segoe UI, sans-serif" font-size="32" font-weight="700" fill="#1a1a2e">rawy</text>
+          <rect x="75" y="54" width="70" height="3" rx="1.5" fill="#6366F1"/>
+        </svg>
+      </div>
+
+      <div class="variations">
+        <div class="variation" style="background: #1a1a2e;">
+          <svg width="40" height="40" viewBox="0 0 50 50">
+            <rect width="50" height="50" rx="16" fill="#6366F1"/>
+            <text x="14" y="36" font-family="Segoe UI, sans-serif" font-size="28" font-weight="700" fill="white">R</text>
+          </svg>
+          <span style="color: white; font-weight: 600;">rawy</span>
+        </div>
+        <div class="variation" style="background: white; border: 1px solid #e5e5e5;">
+          <svg width="40" height="40" viewBox="0 0 50 50">
+            <rect width="50" height="50" rx="16" fill="#1a1a2e"/>
+            <text x="14" y="36" font-family="Segoe UI, sans-serif" font-size="28" font-weight="700" fill="white">R</text>
+          </svg>
+          <span style="color: #1a1a2e; font-weight: 600;">rawy</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Color Palette Reference -->
+    <div class="concept-card">
+      <h3>Brand Color Palette</h3>
+      <p>Suggested colors for the Rawy brand identity, balancing professionalism with youth appeal.</p>
+
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+        <div style="width: 80px; text-align: center;">
+          <div style="width: 60px; height: 60px; border-radius: 12px; background: #6366F1; margin: 0 auto 8px;"></div>
+          <div style="font-size: 11px; color: #666;">Primary<br/>#6366F1</div>
+        </div>
+        <div style="width: 80px; text-align: center;">
+          <div style="width: 60px; height: 60px; border-radius: 12px; background: #8B5CF6; margin: 0 auto 8px;"></div>
+          <div style="font-size: 11px; color: #666;">Secondary<br/>#8B5CF6</div>
+        </div>
+        <div style="width: 80px; text-align: center;">
+          <div style="width: 60px; height: 60px; border-radius: 12px; background: #EC4899; margin: 0 auto 8px;"></div>
+          <div style="font-size: 11px; color: #666;">Accent<br/>#EC4899</div>
+        </div>
+        <div style="width: 80px; text-align: center;">
+          <div style="width: 60px; height: 60px; border-radius: 12px; background: #F59E0B; margin: 0 auto 8px;"></div>
+          <div style="font-size: 11px; color: #666;">Gold<br/>#F59E0B</div>
+        </div>
+        <div style="width: 80px; text-align: center;">
+          <div style="width: 60px; height: 60px; border-radius: 12px; background: #1a1a2e; margin: 0 auto 8px;"></div>
+          <div style="font-size: 11px; color: #666;">Dark<br/>#1A1A2E</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
