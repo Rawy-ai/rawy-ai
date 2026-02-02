@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { themes, Theme, Language, getThemeFromStorage, getLangFromStorage, saveTheme, saveLang } from '@/lib/theme';
+import Header from '@/components/Header';
 
 // Translations
 const translations = {
@@ -141,126 +142,12 @@ export default function VisionPage() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: c.bg, color: c.text }} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        backgroundColor: c.navBg,
-        backdropFilter: 'blur(10px)',
-        borderBottom: `1px solid ${c.border}`
-      }}>
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '0 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: '72px'
-        }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              background: c.gradient,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: '18px'
-            }}>R</div>
-            <span style={{ fontSize: '24px', fontWeight: '700', color: c.text, fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit' }}>
-              {isRTL ? 'راوي' : 'Rawy'}
-            </span>
-          </Link>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '8px',
-                border: `1px solid ${c.border}`,
-                backgroundColor: c.bgCard,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '16px'
-              }}
-            >
-              {theme === 'light' ? '🌙' : '☀️'}
-            </button>
-
-            {/* Language Toggle */}
-            <div style={{
-              display: 'flex',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              border: `1px solid ${c.border}`
-            }}>
-              <button
-                onClick={() => toggleLanguage('en')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: lang === 'en' ? `${c.primary}20` : 'transparent',
-                  color: lang === 'en' ? c.primary : c.textMuted
-                }}
-              >
-                EN
-              </button>
-              <button
-                onClick={() => toggleLanguage('ar')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: lang === 'ar' ? `${c.primary}20` : 'transparent',
-                  color: lang === 'ar' ? c.primary : c.textMuted,
-                  fontFamily: 'Tajawal, sans-serif'
-                }}
-              >
-                عربي
-              </button>
-            </div>
-
-            <Link href="/" style={{ color: c.textMuted, textDecoration: 'none', fontWeight: '500', fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit' }}>
-              {t.home}
-            </Link>
-            <Link href="/for-kids" style={{ color: c.textMuted, textDecoration: 'none', fontWeight: '500', fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit' }}>
-              {t.forKids}
-            </Link>
-            <button
-              onClick={handleGetStarted}
-              style={{
-                padding: '12px 24px',
-                fontSize: '15px',
-                fontWeight: '600',
-                color: '#fff',
-                background: c.gradient,
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-              }}
-            >
-              {t.tryStudio}
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Header
+        theme={theme}
+        lang={lang}
+        onThemeChange={setTheme}
+        onLangChange={setLang}
+      />
 
       {/* Hero Section */}
       <section style={{

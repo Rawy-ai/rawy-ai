@@ -4,55 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AuthModal from '@/components/AuthModal';
-
-type Language = 'en' | 'ar';
-type Theme = 'light' | 'dark';
-
-// Theme colors with Saudi-inspired palette
-const themes = {
-  light: {
-    bg: '#FFFDF8',           // Warm cream/sand
-    bgAlt: '#FDF8F0',        // Softer cream
-    bgCard: '#FFFFFF',
-    bgCardAlt: 'rgba(0,108,53,0.03)', // Subtle green tint
-    text: '#1A2B1A',         // Deep green-black
-    textMuted: '#5A6B5A',
-    textLight: '#8A9B8A',
-    border: 'rgba(0,108,53,0.1)',
-    borderLight: 'rgba(0,108,53,0.05)',
-    primary: '#006C35',      // Saudi Green
-    primaryLight: '#0D9F61',
-    secondary: '#8B5CF6',    // Keep purple for app
-    accent: '#C9A227',       // Gold
-    accentLight: '#E8D48A',
-    gradient: 'linear-gradient(135deg, #006C35, #0D9F61)',
-    gradientAlt: 'linear-gradient(135deg, #8B5CF6, #006C35)',
-    gradientGold: 'linear-gradient(135deg, #C9A227, #E8D48A)',
-    shadow: 'rgba(0,108,53,0.08)',
-    navBg: 'rgba(255,253,248,0.95)',
-  },
-  dark: {
-    bg: '#0A0F0A',           // Deep green-black
-    bgAlt: '#111A11',
-    bgCard: 'rgba(255,255,255,0.03)',
-    bgCardAlt: 'rgba(0,108,53,0.08)',
-    text: '#FFFFFF',
-    textMuted: '#A0B0A0',
-    textLight: '#6A7A6A',
-    border: 'rgba(255,255,255,0.08)',
-    borderLight: 'rgba(255,255,255,0.04)',
-    primary: '#0D9F61',      // Brighter green for dark mode
-    primaryLight: '#2ECC71',
-    secondary: '#A78BFA',
-    accent: '#E8D48A',       // Lighter gold for dark
-    accentLight: '#C9A227',
-    gradient: 'linear-gradient(135deg, #0D9F61, #2ECC71)',
-    gradientAlt: 'linear-gradient(135deg, #A78BFA, #0D9F61)',
-    gradientGold: 'linear-gradient(135deg, #E8D48A, #C9A227)',
-    shadow: 'rgba(0,0,0,0.3)',
-    navBg: 'rgba(10,15,10,0.9)',
-  }
-};
+import Header from '@/components/Header';
+import { themes, Theme, Language, getThemeFromStorage, getLangFromStorage, saveTheme, saveLang } from '@/lib/theme';
 
 // Translations
 const translations = {
@@ -287,28 +240,11 @@ export default function Home() {
     window.addEventListener('resize', checkMobile);
 
     // Check saved preferences
-    const savedLang = localStorage.getItem('rawy_lang') as Language;
-    if (savedLang && (savedLang === 'en' || savedLang === 'ar')) {
-      setLang(savedLang);
-    }
-    const savedTheme = localStorage.getItem('rawy_theme') as Theme;
-    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-      setTheme(savedTheme);
-    }
+    setTheme(getThemeFromStorage());
+    setLang(getLangFromStorage());
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  const toggleLanguage = (newLang: Language) => {
-    setLang(newLang);
-    localStorage.setItem('rawy_lang', newLang);
-  };
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('rawy_theme', newTheme);
-  };
 
   const handleGetStarted = () => {
     const user = localStorage.getItem('rawy_user');
@@ -368,179 +304,13 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        backgroundColor: c.navBg,
-        backdropFilter: 'blur(20px)',
-        borderBottom: `1px solid ${c.border}`,
-        transition: 'all 0.3s'
-      }}>
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '0 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: '80px'
-        }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-            <div style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '12px',
-              background: c.gradient,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: '20px',
-              boxShadow: `0 4px 20px ${c.primary}40`
-            }}>R</div>
-            <span style={{
-              fontSize: '26px',
-              fontWeight: '800',
-              color: c.text,
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-            }}>
-              {isRTL ? 'راوي' : 'Rawy'}
-            </span>
-          </Link>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                border: `1px solid ${c.border}`,
-                backgroundColor: c.bgCard,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '18px',
-                transition: 'all 0.2s'
-              }}
-              title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-            >
-              {theme === 'light' ? '🌙' : '☀️'}
-            </button>
-
-            {/* Language Toggle */}
-            <div style={{
-              display: 'flex',
-              borderRadius: '10px',
-              overflow: 'hidden',
-              border: `1px solid ${c.border}`,
-              backgroundColor: c.bgCard
-            }}>
-              <button
-                onClick={() => toggleLanguage('en')}
-                style={{
-                  padding: '8px 14px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: lang === 'en' ? `${c.primary}20` : 'transparent',
-                  color: lang === 'en' ? c.primary : c.textMuted,
-                  transition: 'all 0.2s'
-                }}
-              >
-                EN
-              </button>
-              <button
-                onClick={() => toggleLanguage('ar')}
-                style={{
-                  padding: '8px 14px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: lang === 'ar' ? `${c.primary}20` : 'transparent',
-                  color: lang === 'ar' ? c.primary : c.textMuted,
-                  fontFamily: 'Tajawal, sans-serif',
-                  transition: 'all 0.2s'
-                }}
-              >
-                عربي
-              </button>
-            </div>
-
-            {!isMobile && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '28px', marginLeft: '8px' }}>
-                <Link href="/for-kids" style={{
-                  color: c.textMuted,
-                  textDecoration: 'none',
-                  fontWeight: '500',
-                  fontSize: '15px',
-                  transition: 'color 0.2s',
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                }}>{t.forKids}</Link>
-                <Link href="/vision" style={{
-                  color: c.textMuted,
-                  textDecoration: 'none',
-                  fontWeight: '500',
-                  fontSize: '15px',
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                }}>{t.ourVision}</Link>
-                <a href="#how-it-works" style={{
-                  color: c.textMuted,
-                  textDecoration: 'none',
-                  fontWeight: '500',
-                  fontSize: '15px',
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                }}>{t.howItWorks}</a>
-                <button
-                  onClick={handleGetStarted}
-                  style={{
-                    padding: '12px 28px',
-                    fontSize: '15px',
-                    fontWeight: '600',
-                    color: '#fff',
-                    background: c.gradient,
-                    border: 'none',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    boxShadow: `0 4px 20px ${c.primary}30`,
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                  }}
-                >
-                  {t.tryStudio}
-                </button>
-              </div>
-            )}
-
-            {isMobile && (
-              <button
-                onClick={handleGetStarted}
-                style={{
-                  padding: '10px 20px',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  color: '#fff',
-                  background: c.gradient,
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                }}
-              >
-                {t.tryFree}
-              </button>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Header
+        theme={theme}
+        lang={lang}
+        onThemeChange={setTheme}
+        onLangChange={setLang}
+        showHowItWorks={true}
+      />
 
       {/* Hero Section */}
       <section style={{

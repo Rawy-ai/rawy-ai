@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { themes, Theme, Language, getThemeFromStorage, getLangFromStorage, saveTheme, saveLang } from '@/lib/theme';
+import Header from '@/components/Header';
 
 type Step = 'author' | 'age' | 'hero' | 'gender' | 'personality' | 'power' | 'companion' | 'world' | 'quest' | 'custom' | 'loading' | 'story';
 type AgeLevel = '9-10' | '11-12' | '13-15' | '';
@@ -541,127 +542,13 @@ export default function DemoPage() {
       transition: 'background-color 0.3s, color 0.3s'
     }} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        backgroundColor: c.navBg,
-        backdropFilter: 'blur(10px)',
-        borderBottom: `1px solid ${c.border}`
-      }}>
-        <div style={{
-          maxWidth: '900px',
-          margin: '0 auto',
-          padding: '0 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: '64px'
-        }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-            <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '10px',
-              background: c.gradient,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontWeight: 'bold'
-            }}>R</div>
-            <span style={{ fontSize: '20px', fontWeight: 'bold', color: c.text }}>
-              {isRTL ? 'راوي' : 'Rawy'}
-            </span>
-          </Link>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '8px',
-                border: `1px solid ${c.border}`,
-                backgroundColor: c.bgCard,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '16px'
-              }}
-            >
-              {theme === 'light' ? '🌙' : '☀️'}
-            </button>
-
-            {/* Language Toggle */}
-            <div style={{
-              display: 'flex',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              border: `1px solid ${c.border}`
-            }}>
-              <button
-                onClick={() => toggleLanguage('en')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: lang === 'en' ? `${c.primary}20` : 'transparent',
-                  color: lang === 'en' ? c.primary : c.textMuted
-                }}
-              >
-                EN
-              </button>
-              <button
-                onClick={() => toggleLanguage('ar')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: lang === 'ar' ? `${c.primary}20` : 'transparent',
-                  color: lang === 'ar' ? c.primary : c.textMuted,
-                  fontFamily: 'Tajawal, sans-serif'
-                }}
-              >
-                عربي
-              </button>
-            </div>
-
-            <div style={{
-              padding: '6px 14px',
-              borderRadius: '100px',
-              backgroundColor: `${c.primary}15`,
-              fontSize: '13px',
-              color: c.primary,
-              fontWeight: '600'
-            }}>
-              ✍️ {config.authorName || user.name}
-            </div>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: '8px 16px',
-                border: `1px solid ${c.border}`,
-                borderRadius: '8px',
-                backgroundColor: 'transparent',
-                cursor: 'pointer',
-                fontSize: '14px',
-                color: c.textMuted
-              }}
-            >
-              {t.logout}
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header
+        theme={theme}
+        lang={lang}
+        onThemeChange={setTheme}
+        onLangChange={setLang}
+        variant="studio"
+      />
 
       {/* Main Content */}
       <main style={{ paddingTop: '100px', paddingBottom: '48px', paddingLeft: '24px', paddingRight: '24px' }}>
