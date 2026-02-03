@@ -5,6 +5,21 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { themes, Theme, Language, getThemeFromStorage, getLangFromStorage, saveTheme, saveLang } from '@/lib/theme';
 import Header from '@/components/Header';
+import {
+  Shield, Lightbulb, Smile, Heart, Search, Target, Zap, EyeOff, Dumbbell, Wind, Brain, Clock,
+  Cpu, Flame, Moon, Sunrise, MessageCircle, Send, Sun, Rocket, Droplets, Trees, Building2, Landmark,
+  Gem, LifeBuoy, Compass, Swords, Trophy, Sparkles, Star, ArrowRight, ArrowLeft, Copy, RefreshCw, Check
+} from 'lucide-react';
+
+// Icon mapping for dynamic rendering
+const iconMap: { [key: string]: React.ComponentType<{ size?: number; style?: React.CSSProperties }> } = {
+  shield: Shield, lightbulb: Lightbulb, smile: Smile, heart: Heart, search: Search, target: Target,
+  zap: Zap, 'eye-off': EyeOff, dumbbell: Dumbbell, wind: Wind, brain: Brain, clock: Clock,
+  cpu: Cpu, flame: Flame, moon: Moon, sunrise: Sunrise, 'message-circle': MessageCircle, send: Send,
+  sun: Sun, rocket: Rocket, droplets: Droplets, trees: Trees, 'building-2': Building2, landmark: Landmark,
+  gem: Gem, 'life-buoy': LifeBuoy, compass: Compass, swords: Swords, trophy: Trophy, sparkles: Sparkles,
+  star: Star
+};
 
 type Step = 'author' | 'age' | 'hero' | 'gender' | 'personality' | 'power' | 'companion' | 'world' | 'quest' | 'custom' | 'loading' | 'story';
 type AgeLevel = '9-10' | '11-12' | '13-15' | '';
@@ -25,16 +40,16 @@ interface StoryConfig {
 // Age level descriptions for story generation
 const ageLevelConfig = {
   '9-10': {
-    en: { label: 'Explorer (9-10)', desc: 'Simple adventures with fun characters', emoji: '🌟' },
-    ar: { label: 'مستكشف (9-10)', desc: 'مغامرات بسيطة مع شخصيات ممتعة', emoji: '🌟' }
+    en: { label: 'Explorer (9-10)', desc: 'Simple adventures with fun characters', icon: 'star' },
+    ar: { label: 'مستكشف (9-10)', desc: 'مغامرات بسيطة مع شخصيات ممتعة', icon: 'star' }
   },
   '11-12': {
-    en: { label: 'Adventurer (11-12)', desc: 'Exciting quests with more twists', emoji: '⚡' },
-    ar: { label: 'مغامر (11-12)', desc: 'مهام مثيرة مع المزيد من التشويق', emoji: '⚡' }
+    en: { label: 'Adventurer (11-12)', desc: 'Exciting quests with more twists', icon: 'zap' },
+    ar: { label: 'مغامر (11-12)', desc: 'مهام مثيرة مع المزيد من التشويق', icon: 'zap' }
   },
   '13-15': {
-    en: { label: 'Champion (13-15)', desc: 'Complex stories with deeper themes', emoji: '🔥' },
-    ar: { label: 'بطل (13-15)', desc: 'قصص معقدة مع مواضيع أعمق', emoji: '🔥' }
+    en: { label: 'Champion (13-15)', desc: 'Complex stories with deeper themes', icon: 'flame' },
+    ar: { label: 'بطل (13-15)', desc: 'قصص معقدة مع مواضيع أعمق', icon: 'flame' }
   }
 };
 
@@ -54,7 +69,7 @@ const translations = {
     complete: 'complete',
     back: '← Back',
     continue: 'Continue →',
-    createStory: '✨ Create My Story!',
+    createStory: 'Create My Story',
 
     authorTitle: 'Your Author Name',
     authorDesc: 'This will appear on every story you create',
@@ -105,9 +120,9 @@ const translations = {
     sendToFriend: 'Send to Friend to Continue',
     friendRequired: 'After 5 scenes, invite a friend to decide what happens next!',
 
-    copyFullStory: '📋 Copy Full Story',
-    createNewStory: '🔄 Create New Story',
-    copied: '✓ Copied!',
+    copyFullStory: 'Copy Full Story',
+    createNewStory: 'Create New Story',
+    copied: 'Copied!',
   },
   ar: {
     storyStudio: 'استوديو القصص',
@@ -117,7 +132,7 @@ const translations = {
     complete: 'مكتمل',
     back: 'رجوع ←',
     continue: '← متابعة',
-    createStory: '✨ أنشئ قصتي!',
+    createStory: 'أنشئ قصتي',
 
     authorTitle: 'اسم المؤلف',
     authorDesc: 'سيظهر هذا الاسم على كل قصة تكتبها',
@@ -168,56 +183,56 @@ const translations = {
     sendToFriend: 'أرسل لصديق ليكمل',
     friendRequired: 'بعد 5 مشاهد، ادعُ صديقاً ليقرر ما سيحدث!',
 
-    copyFullStory: '📋 نسخ القصة كاملة',
-    createNewStory: '🔄 إنشاء قصة جديدة',
-    copied: '✓ تم النسخ!',
+    copyFullStory: 'نسخ القصة كاملة',
+    createNewStory: 'إنشاء قصة جديدة',
+    copied: 'تم النسخ!',
   }
 };
 
-// Data with translations
+// Data with translations - using icon names instead of emojis for professional look
 const getPersonalities = (lang: Language) => [
-  { id: 'brave', label: lang === 'en' ? 'Brave' : 'شجاع', emoji: '🦁' },
-  { id: 'clever', label: lang === 'en' ? 'Clever' : 'ذكي', emoji: '🧠' },
-  { id: 'funny', label: lang === 'en' ? 'Funny' : 'مرح', emoji: '😄' },
-  { id: 'kind', label: lang === 'en' ? 'Kind' : 'طيب', emoji: '💖' },
-  { id: 'curious', label: lang === 'en' ? 'Curious' : 'فضولي', emoji: '🔍' },
-  { id: 'determined', label: lang === 'en' ? 'Determined' : 'مصمم', emoji: '💪' },
+  { id: 'brave', label: lang === 'en' ? 'Brave' : 'شجاع', icon: 'shield' },
+  { id: 'clever', label: lang === 'en' ? 'Clever' : 'ذكي', icon: 'lightbulb' },
+  { id: 'funny', label: lang === 'en' ? 'Funny' : 'مرح', icon: 'smile' },
+  { id: 'kind', label: lang === 'en' ? 'Kind' : 'طيب', icon: 'heart' },
+  { id: 'curious', label: lang === 'en' ? 'Curious' : 'فضولي', icon: 'search' },
+  { id: 'determined', label: lang === 'en' ? 'Determined' : 'مصمم', icon: 'target' },
 ];
 
 const getPowers = (lang: Language) => [
-  { id: 'speed', label: lang === 'en' ? 'Super Speed' : 'سرعة خارقة', emoji: '⚡' },
-  { id: 'invisible', label: lang === 'en' ? 'Invisibility' : 'الاختفاء', emoji: '👻' },
-  { id: 'strength', label: lang === 'en' ? 'Super Strength' : 'قوة خارقة', emoji: '💪' },
-  { id: 'flying', label: lang === 'en' ? 'Flying' : 'الطيران', emoji: '🦅' },
-  { id: 'telepathy', label: lang === 'en' ? 'Mind Reading' : 'قراءة الأفكار', emoji: '🧠' },
-  { id: 'timecontrol', label: lang === 'en' ? 'Time Control' : 'التحكم بالزمن', emoji: '⏰' },
+  { id: 'speed', label: lang === 'en' ? 'Super Speed' : 'سرعة خارقة', icon: 'zap' },
+  { id: 'invisible', label: lang === 'en' ? 'Invisibility' : 'الاختفاء', icon: 'eye-off' },
+  { id: 'strength', label: lang === 'en' ? 'Super Strength' : 'قوة خارقة', icon: 'dumbbell' },
+  { id: 'flying', label: lang === 'en' ? 'Flying' : 'الطيران', icon: 'wind' },
+  { id: 'telepathy', label: lang === 'en' ? 'Mind Reading' : 'قراءة الأفكار', icon: 'brain' },
+  { id: 'timecontrol', label: lang === 'en' ? 'Time Control' : 'التحكم بالزمن', icon: 'clock' },
 ];
 
 const getCompanions = (lang: Language) => [
-  { id: 'robot', label: lang === 'en' ? 'Robot Friend' : 'روبوت صديق', emoji: '🤖' },
-  { id: 'dragon', label: lang === 'en' ? 'Baby Dragon' : 'تنين صغير', emoji: '🐉' },
-  { id: 'wolf', label: lang === 'en' ? 'Magic Wolf' : 'ذئب سحري', emoji: '🐺' },
-  { id: 'phoenix', label: lang === 'en' ? 'Phoenix' : 'طائر الفينيق', emoji: '🔥' },
-  { id: 'cat', label: lang === 'en' ? 'Talking Cat' : 'قط يتكلم', emoji: '🐱' },
-  { id: 'falcon', label: lang === 'en' ? 'Golden Falcon' : 'صقر ذهبي', emoji: '🦅' },
+  { id: 'robot', label: lang === 'en' ? 'Robot Friend' : 'روبوت صديق', icon: 'cpu' },
+  { id: 'dragon', label: lang === 'en' ? 'Baby Dragon' : 'تنين صغير', icon: 'flame' },
+  { id: 'wolf', label: lang === 'en' ? 'Magic Wolf' : 'ذئب سحري', icon: 'moon' },
+  { id: 'phoenix', label: lang === 'en' ? 'Phoenix' : 'طائر الفينيق', icon: 'sunrise' },
+  { id: 'cat', label: lang === 'en' ? 'Talking Cat' : 'قط يتكلم', icon: 'message-circle' },
+  { id: 'falcon', label: lang === 'en' ? 'Golden Falcon' : 'صقر ذهبي', icon: 'send' },
 ];
 
 const getWorlds = (lang: Language) => [
-  { id: 'desert', label: lang === 'en' ? 'Desert Kingdom' : 'مملكة الصحراء', emoji: '🏜️' },
-  { id: 'space', label: lang === 'en' ? 'Space Station' : 'محطة فضائية', emoji: '🚀' },
-  { id: 'underwater', label: lang === 'en' ? 'Underwater City' : 'مدينة تحت الماء', emoji: '🌊' },
-  { id: 'forest', label: lang === 'en' ? 'Magical Forest' : 'غابة سحرية', emoji: '🌲' },
-  { id: 'future', label: lang === 'en' ? 'Future City' : 'مدينة المستقبل', emoji: '🌆' },
-  { id: 'ancient', label: lang === 'en' ? 'Ancient Ruins' : 'آثار قديمة', emoji: '🏛️' },
+  { id: 'desert', label: lang === 'en' ? 'Desert Kingdom' : 'مملكة الصحراء', icon: 'sun' },
+  { id: 'space', label: lang === 'en' ? 'Space Station' : 'محطة فضائية', icon: 'rocket' },
+  { id: 'underwater', label: lang === 'en' ? 'Underwater City' : 'مدينة تحت الماء', icon: 'droplets' },
+  { id: 'forest', label: lang === 'en' ? 'Magical Forest' : 'غابة سحرية', icon: 'trees' },
+  { id: 'future', label: lang === 'en' ? 'Future City' : 'مدينة المستقبل', icon: 'building-2' },
+  { id: 'ancient', label: lang === 'en' ? 'Ancient Ruins' : 'آثار قديمة', icon: 'landmark' },
 ];
 
 const getQuests = (lang: Language) => [
-  { id: 'treasure', label: lang === 'en' ? 'Find Lost Treasure' : 'إيجاد كنز مفقود', emoji: '💎' },
-  { id: 'rescue', label: lang === 'en' ? 'Rescue Mission' : 'مهمة إنقاذ', emoji: '🆘' },
-  { id: 'mystery', label: lang === 'en' ? 'Solve a Mystery' : 'حل لغز غامض', emoji: '🔮' },
-  { id: 'villain', label: lang === 'en' ? 'Defeat the Villain' : 'هزيمة الشرير', emoji: '⚔️' },
-  { id: 'race', label: lang === 'en' ? 'Win the Race' : 'الفوز بالسباق', emoji: '🏆' },
-  { id: 'portal', label: lang === 'en' ? 'Close the Portal' : 'إغلاق البوابة', emoji: '🌀' },
+  { id: 'treasure', label: lang === 'en' ? 'Find Lost Treasure' : 'إيجاد كنز مفقود', icon: 'gem' },
+  { id: 'rescue', label: lang === 'en' ? 'Rescue Mission' : 'مهمة إنقاذ', icon: 'life-buoy' },
+  { id: 'mystery', label: lang === 'en' ? 'Solve a Mystery' : 'حل لغز غامض', icon: 'compass' },
+  { id: 'villain', label: lang === 'en' ? 'Defeat the Villain' : 'هزيمة الشرير', icon: 'swords' },
+  { id: 'race', label: lang === 'en' ? 'Win the Race' : 'الفوز بالسباق', icon: 'trophy' },
+  { id: 'portal', label: lang === 'en' ? 'Close the Portal' : 'إغلاق البوابة', icon: 'sparkles' },
 ];
 
 export default function DemoPage() {
@@ -482,7 +497,7 @@ export default function DemoPage() {
   }
 
   const renderOptionGrid = (
-    options: { id: string; label: string; emoji: string }[],
+    options: { id: string; label: string; icon: string }[],
     selected: string | string[],
     onSelect: (id: string) => void,
     multi: boolean = false
@@ -498,6 +513,7 @@ export default function DemoPage() {
         const isSelected = multi
           ? (selected as string[]).includes(opt.id)
           : selected === opt.id;
+        const IconComponent = iconMap[opt.icon];
         return (
           <button
             key={opt.id}
@@ -517,7 +533,18 @@ export default function DemoPage() {
               minHeight: '100px'
             }}
           >
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>{opt.emoji}</div>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '12px',
+              background: isSelected ? `${c.primary}20` : `${c.primary}10`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '12px'
+            }}>
+              {IconComponent && <IconComponent size={24} style={{ color: isSelected ? c.primary : c.textMuted }} />}
+            </div>
             <div style={{
               fontWeight: '700',
               color: isSelected ? c.primary : c.text,

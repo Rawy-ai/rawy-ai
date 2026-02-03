@@ -2,49 +2,50 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import AuthModal from '@/components/AuthModal';
 import Header from '@/components/Header';
-import { themes, Theme, Language, getThemeFromStorage, getLangFromStorage, saveTheme, saveLang } from '@/lib/theme';
+import Footer from '@/components/Footer';
+import { themes, Theme, Language, getThemeFromStorage, getLangFromStorage } from '@/lib/theme';
+import {
+  Sparkles, Users, BookOpen, Palette, Video, Shield, Trophy,
+  ArrowRight, Play, Check, Target, Lightbulb, Globe, TrendingUp,
+  Cpu, UserPlus, Layers, Film, Building, Award
+} from 'lucide-react';
 
-// Translations
 const translations = {
   en: {
-    // Nav
-    forKids: 'For Kids',
-    ourVision: 'Our Vision',
-    howItWorks: 'How it Works',
-    login: 'Log in',
-    tryStudio: 'Try Story Studio',
-    tryFree: 'Try Free',
-
-    // Hero
-    badge: '✨ AI-Powered Storytelling Platform',
+    badge: 'AI-Powered Storytelling Platform',
     heroTitle1: 'Where Arab Children',
     heroTitle2: 'Become Authors',
     heroTitle3: 'of Their Own Stories',
-    heroDesc: 'The first AI platform designed specifically for Arab youth ages 9-15. Create culturally authentic Arabic stories that inspire creativity, build literacy, and celebrate heritage.',
+    heroDesc: 'The first AI platform designed for Arab youth ages 9-15. Create culturally authentic Arabic stories with friends, build literacy skills, and celebrate your heritage.',
     openStudio: 'Open Story Studio',
     watchDemo: 'Watch Demo',
     storiesCreated: '3,000+ stories created',
     parentApproved: 'Parent approved',
     valuesAligned: 'Values-aligned',
-
-    // Preview
     storyStudio: 'Story Studio',
     aiGenerated: 'AI Generated',
-    byAuthor: 'By:',
-
-    // Stats bar
     activeAuthors: 'Active Young Authors',
     storiesGenerated: 'Stories Generated',
     countriesReached: 'Countries Reached',
     parentSatisfaction: 'Parent Satisfaction',
 
+    // Collaborative Section
+    collabBadge: 'Collaborative Storytelling',
+    collabTitle: 'Build Stories Together with Friends',
+    collabDesc: 'Rawy makes storytelling a social experience. Start your story, invite friends to add scenes, and create something amazing together.',
+    collabStep1Title: 'Start Your Story',
+    collabStep1Desc: 'Create your hero and write the opening scenes',
+    collabStep2Title: 'Invite Friends',
+    collabStep2Desc: 'Pass the story to friends to add their creative twists',
+    collabStep3Title: 'Create Video Episodes',
+    collabStep3Desc: 'Transform your collaborative story into an animated video',
+
     // Mission
     missionBadge: 'Our Mission',
     missionTitle: 'Preserving Arabic Heritage Through Modern Technology',
-    missionDesc: 'We believe every Arab child should see themselves as heroes in stories that reflect their culture, values, and language. Rawy combines cutting-edge AI with deep cultural understanding.',
+    missionDesc: 'We believe every Arab child should see themselves as heroes in stories that reflect their culture, values, and language.',
     culturalRelevance: 'Cultural Relevance',
     culturalDesc: 'Stories rooted in Arab heritage and Islamic values',
     literacyDev: 'Literacy Development',
@@ -80,20 +81,10 @@ const translations = {
     feature6Title: 'Gamification',
     feature6Desc: 'Badges, leaderboards, and challenges keep kids engaged',
 
-    // Impact
-    impactBadge: 'Our Impact',
-    impactTitle: 'Building the Next Generation of Arab Storytellers',
-    impactDesc: 'Every story created on Rawy contributes to our mission of increasing Arabic literacy, fostering creativity, and strengthening cultural identity among Arab youth.',
-    parentsSay: 'What Parents Say',
-    quote1: '"My daughter finally enjoys reading Arabic. She has created 12 stories already!"',
-    quote1Author: 'Fatima A., Riyadh',
-    quote2: '"The stories are age-appropriate and align with our values. Highly recommend."',
-    quote2Author: 'Ahmed M., Dubai',
-
     // Investment
     investBadge: 'Investment Opportunity',
     investTitle: 'Join Us in Shaping the Future of Arab Storytelling',
-    investDesc: 'Rawy is positioned to become the leading AI-powered content platform for Arab children. With a growing user base and strong unit economics, we are seeking strategic partners to scale across the MENA region.',
+    investDesc: 'Rawy is positioned to become the leading AI-powered content platform for Arab children. With a growing user base and strong unit economics, we seek strategic partners to scale across MENA.',
     marketSize: '$2.4B',
     marketLabel: 'MENA EdTech Market',
     growthRate: '18%',
@@ -104,53 +95,43 @@ const translations = {
 
     // CTA
     ctaTitle: 'Ready to Inspire Young Authors?',
-    ctaDesc: 'Join thousands of families using Rawy to nurture creativity and cultural pride. Free to try. No credit card required.',
+    ctaDesc: 'Join thousands of families using Rawy to nurture creativity and cultural pride. Free to try.',
     ctaButton: 'Open Story Studio — Free',
-    ctaNote: '✓ No signup required to try  ✓ 5 free stories per day  ✓ Safe for kids',
-
-    // Footer
-    privacy: 'Privacy Policy',
-    terms: 'Terms of Service',
-    contact: 'Contact',
-    madeIn: 'Made with ♥ in Saudi Arabia',
-    copyright: '© 2026 Rawy.',
+    ctaNote1: 'No signup required to try',
+    ctaNote2: '5 free stories per day',
+    ctaNote3: 'Safe for kids',
   },
   ar: {
-    // Nav
-    forKids: 'للأطفال',
-    ourVision: 'رؤيتنا',
-    howItWorks: 'كيف يعمل',
-    login: 'تسجيل الدخول',
-    tryStudio: 'جرّب استوديو القصص',
-    tryFree: 'جرّب مجاناً',
-
-    // Hero
-    badge: '✨ منصة القصص بالذكاء الاصطناعي',
+    badge: 'منصة القصص بالذكاء الاصطناعي',
     heroTitle1: 'حيث يصبح الأطفال العرب',
     heroTitle2: 'مؤلفين',
     heroTitle3: 'لقصصهم الخاصة',
-    heroDesc: 'أول منصة ذكاء اصطناعي مصممة خصيصاً للشباب العربي من 9-15 سنة. اكتب قصصاً عربية أصيلة تُلهم الإبداع وتبني مهارات القراءة وتحتفي بالتراث.',
+    heroDesc: 'أول منصة ذكاء اصطناعي مصممة للشباب العربي من 9-15 سنة. اكتب قصصاً عربية أصيلة مع أصدقائك وطوّر مهارات القراءة واحتفِ بتراثك.',
     openStudio: 'افتح استوديو القصص',
     watchDemo: 'شاهد العرض',
-    storiesCreated: '+3,000 قصة مُنشأة',
+    storiesCreated: '+3,000 قصة',
     parentApproved: 'موافقة الوالدين',
     valuesAligned: 'متوافق مع القيم',
-
-    // Preview
     storyStudio: 'استوديو القصص',
     aiGenerated: 'إنشاء الذكاء الاصطناعي',
-    byAuthor: 'بقلم:',
-
-    // Stats bar
     activeAuthors: 'مؤلف شاب نشط',
     storiesGenerated: 'قصة تم إنشاؤها',
     countriesReached: 'دولة',
     parentSatisfaction: 'رضا الوالدين',
 
-    // Mission
+    collabBadge: 'القصص التعاونية',
+    collabTitle: 'ابنِ القصص مع أصدقائك',
+    collabDesc: 'راوي يجعل كتابة القصص تجربة اجتماعية. ابدأ قصتك، ادعُ أصدقاءك لإضافة مشاهد، واصنعوا شيئاً مذهلاً معاً.',
+    collabStep1Title: 'ابدأ قصتك',
+    collabStep1Desc: 'أنشئ بطلك واكتب المشاهد الافتتاحية',
+    collabStep2Title: 'ادعُ أصدقاءك',
+    collabStep2Desc: 'مرر القصة لأصدقائك ليضيفوا لمساتهم الإبداعية',
+    collabStep3Title: 'اصنع فيديو',
+    collabStep3Desc: 'حوّل قصتكم التعاونية إلى فيديو متحرك',
+
     missionBadge: 'مهمتنا',
     missionTitle: 'الحفاظ على التراث العربي من خلال التكنولوجيا الحديثة',
-    missionDesc: 'نؤمن بأن كل طفل عربي يستحق أن يرى نفسه بطلاً في قصص تعكس ثقافته وقيمه ولغته. راوي يجمع بين الذكاء الاصطناعي المتطور والفهم الثقافي العميق.',
+    missionDesc: 'نؤمن بأن كل طفل عربي يستحق أن يرى نفسه بطلاً في قصص تعكس ثقافته وقيمه ولغته.',
     culturalRelevance: 'الصلة الثقافية',
     culturalDesc: 'قصص متجذرة في التراث العربي والقيم الإسلامية',
     literacyDev: 'تطوير القراءة',
@@ -158,7 +139,6 @@ const translations = {
     creativeExp: 'التعبير الإبداعي',
     creativeDesc: 'يصبح الأطفال مؤلفين، يبنون الثقة والإبداع',
 
-    // How it works
     howBadge: 'كيف يعمل',
     howTitle: 'من الخيال إلى قصة منشورة في دقائق',
     step1Title: 'أنشئ الشخصية',
@@ -170,56 +150,38 @@ const translations = {
     step4Title: 'انشر القصة',
     step4Desc: 'الذكاء الاصطناعي ينشئ قصتك مع رسومات جميلة',
 
-    // Features
     featuresBadge: 'لماذا راوي',
     featuresTitle: 'مصمم للجيل القادم من الكتّاب العرب',
     feature1Title: 'إنشاء بالذكاء الاصطناعي',
-    feature1Desc: 'GPT-4 و DALL-E 3 المتقدمان ينشئان قصصاً ورسومات فريدة',
+    feature1Desc: 'GPT-4 و DALL-E 3 ينشئان قصصاً ورسومات فريدة',
     feature2Title: 'قصص تعاونية',
     feature2Desc: 'يمكن للأطفال دعوة أصدقائهم لمواصلة القصص معاً',
     feature3Title: 'محتوى مناسب للعمر',
-    feature3Desc: 'القصص تتكيف مع مستوى القراءة: مستكشف (9-10)، مغامر (11-12)، بطل (13-15)',
+    feature3Desc: 'القصص تتكيف مع مستوى القراءة: مستكشف، مغامر، بطل',
     feature4Title: 'إنشاء الفيديو',
-    feature4Desc: 'حوّل القصص إلى فيديوهات متحركة للمشاركة مع العائلة',
+    feature4Desc: 'حوّل القصص إلى فيديوهات متحركة للمشاركة',
     feature5Title: 'الأصالة الثقافية',
     feature5Desc: 'كل قصة تحترم التراث العربي والقيم الإسلامية',
     feature6Title: 'التلعيب',
-    feature6Desc: 'شارات ولوحات صدارة وتحديات تحافظ على تفاعل الأطفال',
+    feature6Desc: 'شارات ولوحات صدارة وتحديات تحافظ على التفاعل',
 
-    // Impact
-    impactBadge: 'تأثيرنا',
-    impactTitle: 'نبني الجيل القادم من الكتّاب العرب',
-    impactDesc: 'كل قصة تُنشأ على راوي تساهم في مهمتنا لزيادة محو الأمية العربية وتعزيز الإبداع وتقوية الهوية الثقافية بين الشباب العربي.',
-    parentsSay: 'ماذا يقول الآباء',
-    quote1: '"ابنتي أخيراً تستمتع بقراءة العربية. لقد أنشأت 12 قصة بالفعل!"',
-    quote1Author: 'فاطمة أ.، الرياض',
-    quote2: '"القصص مناسبة للعمر ومتوافقة مع قيمنا. أوصي بها بشدة."',
-    quote2Author: 'أحمد م.، دبي',
-
-    // Investment
     investBadge: 'فرصة استثمارية',
     investTitle: 'انضم إلينا في تشكيل مستقبل القصص العربية',
-    investDesc: 'راوي في موقع يؤهله ليصبح المنصة الرائدة للمحتوى بالذكاء الاصطناعي للأطفال العرب. مع قاعدة مستخدمين متنامية واقتصاديات وحدة قوية، نبحث عن شركاء استراتيجيين للتوسع في منطقة الشرق الأوسط وشمال أفريقيا.',
+    investDesc: 'راوي في موقع يؤهله ليصبح المنصة الرائدة للمحتوى بالذكاء الاصطناعي للأطفال العرب.',
     marketSize: '$2.4B',
-    marketLabel: 'سوق التقنية التعليمية في المنطقة',
+    marketLabel: 'سوق التقنية التعليمية',
     growthRate: '18%',
     growthLabel: 'معدل النمو السنوي',
     targetUsers: '+50M',
     targetLabel: 'طفل ناطق بالعربية',
     learnMore: 'اعرف المزيد عن الاستثمار',
 
-    // CTA
     ctaTitle: 'مستعد لإلهام المؤلفين الصغار؟',
-    ctaDesc: 'انضم إلى آلاف العائلات التي تستخدم راوي لتنمية الإبداع والفخر الثقافي. مجاني للتجربة. لا حاجة لبطاقة ائتمان.',
+    ctaDesc: 'انضم إلى آلاف العائلات التي تستخدم راوي لتنمية الإبداع والفخر الثقافي.',
     ctaButton: 'افتح استوديو القصص — مجاناً',
-    ctaNote: '✓ لا حاجة للتسجيل للتجربة  ✓ 5 قصص مجانية يومياً  ✓ آمن للأطفال',
-
-    // Footer
-    privacy: 'سياسة الخصوصية',
-    terms: 'شروط الخدمة',
-    contact: 'اتصل بنا',
-    madeIn: 'صُنع بـ ♥ في المملكة العربية السعودية',
-    copyright: '© 2026 راوي.',
+    ctaNote1: 'لا حاجة للتسجيل',
+    ctaNote2: '5 قصص مجانية يومياً',
+    ctaNote3: 'آمن للأطفال',
   }
 };
 
@@ -238,11 +200,8 @@ export default function Home() {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-
-    // Check saved preferences
     setTheme(getThemeFromStorage());
     setLang(getLangFromStorage());
-
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -260,6 +219,38 @@ export default function Home() {
     router.push('/demo');
   };
 
+  const Badge = ({ children }: { children: React.ReactNode }) => (
+    <div style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '8px',
+      padding: '10px 20px',
+      borderRadius: '100px',
+      background: `${c.primary}10`,
+      border: `1px solid ${c.primary}20`,
+      color: c.primary,
+      fontSize: '14px',
+      fontWeight: '600',
+      marginBottom: '24px',
+      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
+    }}>
+      {children}
+    </div>
+  );
+
+  const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+    <h2 style={{
+      fontSize: isMobile ? '32px' : '48px',
+      fontWeight: '800',
+      color: c.text,
+      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif',
+      lineHeight: '1.2',
+      marginBottom: '24px'
+    }}>
+      {children}
+    </h2>
+  );
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -268,7 +259,7 @@ export default function Home() {
       transition: 'background-color 0.3s, color 0.3s'
     }} dir={isRTL ? 'rtl' : 'ltr'}>
 
-      {/* Subtle Pattern Background */}
+      {/* Background */}
       <div style={{
         position: 'fixed',
         top: 0,
@@ -280,7 +271,6 @@ export default function Home() {
         zIndex: 0,
         opacity: theme === 'light' ? 0.4 : 0.15
       }}>
-        {/* Geometric Islamic-inspired pattern overlay */}
         <div style={{
           position: 'absolute',
           top: '-50%',
@@ -303,14 +293,7 @@ export default function Home() {
         }} />
       </div>
 
-      {/* Navigation */}
-      <Header
-        theme={theme}
-        lang={lang}
-        onThemeChange={setTheme}
-        onLangChange={setLang}
-        showHowItWorks={true}
-      />
+      <Header theme={theme} lang={lang} onThemeChange={setTheme} onLangChange={setLang} showHowItWorks={true} />
 
       {/* Hero Section */}
       <section style={{
@@ -327,31 +310,17 @@ export default function Home() {
             alignItems: 'center'
           }}>
             <div style={{ flex: 1 }}>
-              {/* Badge with Saudi green accent */}
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 20px',
-                borderRadius: '100px',
-                background: `${c.primary}10`,
-                border: `1px solid ${c.primary}25`,
-                color: c.primary,
-                fontSize: '14px',
-                fontWeight: '600',
-                marginBottom: '28px',
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-              }}>
+              <Badge>
+                <Sparkles size={16} />
                 {t.badge}
-              </div>
+              </Badge>
 
-              {/* Title */}
               <h1 style={{
                 fontSize: isMobile ? '40px' : '58px',
                 fontWeight: '800',
                 lineHeight: '1.1',
                 marginBottom: '28px',
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
               }}>
                 <span style={{ color: c.text }}>{t.heroTitle1}</span><br />
                 <span style={{
@@ -363,19 +332,17 @@ export default function Home() {
                 <span style={{ color: c.text }}>{t.heroTitle3}</span>
               </h1>
 
-              {/* Description */}
               <p style={{
                 fontSize: isMobile ? '17px' : '19px',
                 color: c.textMuted,
                 lineHeight: '1.8',
                 marginBottom: '36px',
                 maxWidth: '520px',
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
               }}>
                 {t.heroDesc}
               </p>
 
-              {/* CTA Buttons */}
               <div style={{ display: 'flex', gap: '16px', marginBottom: '48px', flexWrap: 'wrap' }}>
                 <button
                   onClick={handleGetStarted}
@@ -390,10 +357,14 @@ export default function Home() {
                     cursor: 'pointer',
                     boxShadow: `0 8px 32px ${c.primary}30`,
                     transition: 'transform 0.2s, box-shadow 0.2s',
-                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
                   }}
                 >
-                  {t.openStudio} →
+                  {t.openStudio}
+                  <ArrowRight size={20} />
                 </button>
                 <button
                   style={{
@@ -406,14 +377,17 @@ export default function Home() {
                     borderRadius: '14px',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
-                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
                   }}
                 >
-                  ▶ {t.watchDemo}
+                  <Play size={18} />
+                  {t.watchDemo}
                 </button>
               </div>
 
-              {/* Trust Signals with green checkmarks */}
               <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '16px' : '28px', flexWrap: 'wrap' }}>
                 {[t.storiesCreated, t.parentApproved, t.valuesAligned].map((item, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -425,13 +399,14 @@ export default function Home() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '12px',
                       color: '#fff'
-                    }}>✓</div>
+                    }}>
+                      <Check size={12} />
+                    </div>
                     <span style={{
                       fontSize: '14px',
                       color: c.textMuted,
-                      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
                     }}>{item}</span>
                   </div>
                 ))}
@@ -439,12 +414,7 @@ export default function Home() {
             </div>
 
             {/* Hero Preview */}
-            <div style={{
-              flex: 1,
-              width: '100%',
-              position: 'relative'
-            }}>
-              {/* Glow effect */}
+            <div style={{ flex: 1, width: '100%', position: 'relative' }}>
               <div style={{
                 position: 'absolute',
                 top: '50%',
@@ -472,7 +442,6 @@ export default function Home() {
                   overflow: 'hidden',
                   border: `1px solid ${c.border}`
                 }}>
-                  {/* Window Header with Saudi green */}
                   <div style={{
                     padding: '16px 20px',
                     background: c.gradient,
@@ -484,8 +453,14 @@ export default function Home() {
                       color: '#fff',
                       fontWeight: '700',
                       fontSize: '15px',
-                      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                    }}>📚 {t.storyStudio}</span>
+                      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}>
+                      <BookOpen size={18} />
+                      {t.storyStudio}
+                    </span>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.3)' }} />
                       <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.3)' }} />
@@ -493,7 +468,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Scene Image with gold/sand gradient */}
                   <div style={{
                     height: isMobile ? '160px' : '200px',
                     background: theme === 'light'
@@ -502,10 +476,19 @@ export default function Home() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    position: 'relative',
-                    overflow: 'hidden'
+                    position: 'relative'
                   }}>
-                    <div style={{ fontSize: '64px', zIndex: 1 }}>🏜️</div>
+                    <div style={{
+                      width: '80px',
+                      height: '80px',
+                      borderRadius: '50%',
+                      background: `${c.accent}30`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Globe size={40} style={{ color: c.accent }} />
+                    </div>
                     <div style={{
                       position: 'absolute',
                       bottom: '12px',
@@ -515,19 +498,17 @@ export default function Home() {
                       borderRadius: '8px',
                       fontSize: '11px',
                       color: '#fff',
-                      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
                     }}>
-                      🎨 {t.aiGenerated}
+                      <Palette size={12} />
+                      {t.aiGenerated}
                     </div>
                   </div>
 
-                  {/* Story Content */}
                   <div style={{ padding: isMobile ? '20px' : '24px' }} dir="rtl">
-                    <div style={{
-                      display: 'flex',
-                      gap: '10px',
-                      marginBottom: '16px'
-                    }}>
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
                       <span style={{
                         padding: '6px 14px',
                         borderRadius: '10px',
@@ -535,8 +516,14 @@ export default function Home() {
                         border: `1px solid ${c.primary}25`,
                         color: c.primary,
                         fontSize: '12px',
-                        fontWeight: '600'
-                      }}>🏜️ صحراء</span>
+                        fontWeight: '600',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}>
+                        <Globe size={12} />
+                        صحراء
+                      </span>
                       <span style={{
                         padding: '6px 14px',
                         borderRadius: '10px',
@@ -544,8 +531,14 @@ export default function Home() {
                         border: `1px solid ${c.accent}30`,
                         color: theme === 'light' ? '#8B6914' : c.accent,
                         fontSize: '12px',
-                        fontWeight: '600'
-                      }}>⚡ مغامرة</span>
+                        fontWeight: '600',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}>
+                        <Sparkles size={12} />
+                        مغامرة
+                      </span>
                     </div>
                     <p style={{
                       fontFamily: 'Tajawal, sans-serif',
@@ -555,17 +548,6 @@ export default function Home() {
                     }}>
                       في أعماق الصحراء، وجد سالم نفسه أمام باب غامض منقوش عليه رموز قديمة...
                     </p>
-                    <div style={{
-                      marginTop: '16px',
-                      padding: '14px',
-                      backgroundColor: c.bgCardAlt,
-                      borderRadius: '12px',
-                      fontSize: '13px',
-                      color: c.textMuted,
-                      border: `1px solid ${c.borderLight}`
-                    }}>
-                      ✍️ بقلم: سالم الحربي
-                    </div>
                   </div>
                 </div>
               </div>
@@ -609,10 +591,86 @@ export default function Home() {
               <div style={{
                 fontSize: '14px',
                 color: c.textMuted,
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
               }}>{stat.label}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Collaborative Storytelling Section */}
+      <section style={{
+        position: 'relative',
+        padding: isMobile ? '80px 24px' : '120px 24px',
+        zIndex: 1
+      }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <Badge>
+              <Users size={16} />
+              {t.collabBadge}
+            </Badge>
+            <SectionTitle>{t.collabTitle}</SectionTitle>
+            <p style={{
+              fontSize: isMobile ? '17px' : '19px',
+              color: c.textMuted,
+              lineHeight: '1.8',
+              maxWidth: '700px',
+              margin: '0 auto',
+              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
+            }}>
+              {t.collabDesc}
+            </p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            gap: '24px'
+          }}>
+            {[
+              { icon: BookOpen, title: t.collabStep1Title, desc: t.collabStep1Desc, color: c.primary },
+              { icon: UserPlus, title: t.collabStep2Title, desc: t.collabStep2Desc, color: c.secondary },
+              { icon: Film, title: t.collabStep3Title, desc: t.collabStep3Desc, color: c.accent },
+            ].map((step, i) => (
+              <div key={i} style={{
+                padding: '40px 32px',
+                backgroundColor: c.bgCard,
+                borderRadius: '24px',
+                border: `1px solid ${c.border}`,
+                boxShadow: `0 4px 20px ${c.shadow}`,
+                textAlign: 'center',
+                transition: 'all 0.3s'
+              }}>
+                <div style={{
+                  width: '72px',
+                  height: '72px',
+                  borderRadius: '20px',
+                  background: `linear-gradient(135deg, ${step.color}20, ${step.color}10)`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 24px',
+                  border: `1px solid ${step.color}25`
+                }}>
+                  <step.icon size={32} style={{ color: step.color }} />
+                </div>
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: '700',
+                  marginBottom: '12px',
+                  color: c.text,
+                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
+                }}>{step.title}</h3>
+                <p style={{
+                  fontSize: '15px',
+                  color: c.textMuted,
+                  lineHeight: '1.7',
+                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
+                }}>{step.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -620,40 +678,19 @@ export default function Home() {
       <section id="mission" style={{
         position: 'relative',
         padding: isMobile ? '80px 24px' : '120px 24px',
+        backgroundColor: c.bgAlt,
         zIndex: 1
       }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-          <div style={{
-            display: 'inline-block',
-            padding: '10px 20px',
-            borderRadius: '100px',
-            background: `${c.primary}10`,
-            border: `1px solid ${c.primary}20`,
-            color: c.primary,
-            fontSize: '14px',
-            fontWeight: '600',
-            marginBottom: '24px',
-            fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-          }}>
-            {t.missionBadge}
-          </div>
-          <h2 style={{
-            fontSize: isMobile ? '32px' : '48px',
-            fontWeight: '800',
-            marginBottom: '24px',
-            color: c.text,
-            fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit',
-            lineHeight: '1.2'
-          }}>
-            {t.missionTitle}
-          </h2>
+          <Badge>{t.missionBadge}</Badge>
+          <SectionTitle>{t.missionTitle}</SectionTitle>
           <p style={{
             fontSize: isMobile ? '17px' : '19px',
             color: c.textMuted,
             lineHeight: '1.8',
             maxWidth: '700px',
             margin: '0 auto 60px',
-            fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+            fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
           }}>
             {t.missionDesc}
           </p>
@@ -664,35 +701,41 @@ export default function Home() {
             gap: '24px'
           }}>
             {[
-              { icon: '🎯', title: t.culturalRelevance, desc: t.culturalDesc },
-              { icon: '📖', title: t.literacyDev, desc: t.literacyDesc },
-              { icon: '✨', title: t.creativeExp, desc: t.creativeDesc },
+              { icon: Target, title: t.culturalRelevance, desc: t.culturalDesc },
+              { icon: BookOpen, title: t.literacyDev, desc: t.literacyDesc },
+              { icon: Lightbulb, title: t.creativeExp, desc: t.creativeDesc },
             ].map((item, i) => (
               <div key={i} style={{
                 padding: '36px 28px',
                 backgroundColor: c.bgCard,
                 borderRadius: '20px',
                 border: `1px solid ${c.border}`,
-                boxShadow: `0 4px 20px ${c.shadow}`,
-                transition: 'all 0.3s',
-                cursor: 'default'
+                boxShadow: `0 4px 20px ${c.shadow}`
               }}>
                 <div style={{
-                  fontSize: '48px',
-                  marginBottom: '20px'
-                }}>{item.icon}</div>
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '16px',
+                  background: `${c.primary}10`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 20px'
+                }}>
+                  <item.icon size={28} style={{ color: c.primary }} />
+                </div>
                 <h3 style={{
                   fontSize: '20px',
                   fontWeight: '700',
                   marginBottom: '12px',
                   color: c.text,
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
                 }}>{item.title}</h3>
                 <p style={{
                   fontSize: '15px',
                   color: c.textMuted,
                   lineHeight: '1.7',
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
                 }}>{item.desc}</p>
               </div>
             ))}
@@ -704,34 +747,12 @@ export default function Home() {
       <section id="how-it-works" style={{
         position: 'relative',
         padding: isMobile ? '80px 24px' : '120px 24px',
-        backgroundColor: c.bgAlt,
         zIndex: 1
       }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-            <div style={{
-              display: 'inline-block',
-              padding: '10px 20px',
-              borderRadius: '100px',
-              background: c.bgCard,
-              border: `1px solid ${c.border}`,
-              color: c.primary,
-              fontSize: '14px',
-              fontWeight: '600',
-              marginBottom: '24px',
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-            }}>
-              {t.howBadge}
-            </div>
-            <h2 style={{
-              fontSize: isMobile ? '32px' : '48px',
-              fontWeight: '800',
-              color: c.text,
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit',
-              lineHeight: '1.2'
-            }}>
-              {t.howTitle}
-            </h2>
+            <Badge>{t.howBadge}</Badge>
+            <SectionTitle>{t.howTitle}</SectionTitle>
           </div>
 
           <div style={{
@@ -750,9 +771,7 @@ export default function Home() {
                 backgroundColor: c.bgCard,
                 borderRadius: '20px',
                 border: `1px solid ${c.border}`,
-                boxShadow: `0 4px 20px ${c.shadow}`,
-                position: 'relative',
-                overflow: 'hidden'
+                boxShadow: `0 4px 20px ${c.shadow}`
               }}>
                 <div style={{
                   width: '52px',
@@ -775,13 +794,13 @@ export default function Home() {
                   fontWeight: '700',
                   marginBottom: '10px',
                   color: c.text,
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
                 }}>{step.title}</h3>
                 <p style={{
                   fontSize: '14px',
                   color: c.textMuted,
                   lineHeight: '1.7',
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
                 }}>{step.desc}</p>
               </div>
             ))}
@@ -793,33 +812,13 @@ export default function Home() {
       <section style={{
         position: 'relative',
         padding: isMobile ? '80px 24px' : '120px 24px',
+        backgroundColor: c.bgAlt,
         zIndex: 1
       }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-            <div style={{
-              display: 'inline-block',
-              padding: '10px 20px',
-              borderRadius: '100px',
-              background: `${c.primary}10`,
-              border: `1px solid ${c.primary}20`,
-              color: c.primary,
-              fontSize: '14px',
-              fontWeight: '600',
-              marginBottom: '24px',
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-            }}>
-              {t.featuresBadge}
-            </div>
-            <h2 style={{
-              fontSize: isMobile ? '32px' : '48px',
-              fontWeight: '800',
-              color: c.text,
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit',
-              lineHeight: '1.2'
-            }}>
-              {t.featuresTitle}
-            </h2>
+            <Badge>{t.featuresBadge}</Badge>
+            <SectionTitle>{t.featuresTitle}</SectionTitle>
           </div>
 
           <div style={{
@@ -828,12 +827,12 @@ export default function Home() {
             gap: '20px'
           }}>
             {[
-              { icon: '🤖', title: t.feature1Title, desc: t.feature1Desc },
-              { icon: '🤝', title: t.feature2Title, desc: t.feature2Desc },
-              { icon: '🎮', title: t.feature3Title, desc: t.feature3Desc },
-              { icon: '🎬', title: t.feature4Title, desc: t.feature4Desc },
-              { icon: '🕌', title: t.feature5Title, desc: t.feature5Desc },
-              { icon: '🏆', title: t.feature6Title, desc: t.feature6Desc },
+              { icon: Cpu, title: t.feature1Title, desc: t.feature1Desc },
+              { icon: Users, title: t.feature2Title, desc: t.feature2Desc },
+              { icon: Layers, title: t.feature3Title, desc: t.feature3Desc },
+              { icon: Video, title: t.feature4Title, desc: t.feature4Desc },
+              { icon: Shield, title: t.feature5Title, desc: t.feature5Desc },
+              { icon: Trophy, title: t.feature6Title, desc: t.feature6Desc },
             ].map((feature, i) => (
               <div key={i} style={{
                 padding: '28px 24px',
@@ -846,22 +845,30 @@ export default function Home() {
                 boxShadow: `0 2px 12px ${c.shadow}`
               }}>
                 <div style={{
-                  fontSize: '32px',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
+                  background: `${c.primary}10`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   flexShrink: 0
-                }}>{feature.icon}</div>
+                }}>
+                  <feature.icon size={24} style={{ color: c.primary }} />
+                </div>
                 <div>
                   <h3 style={{
                     fontSize: '16px',
                     fontWeight: '700',
                     marginBottom: '8px',
                     color: c.text,
-                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
                   }}>{feature.title}</h3>
                   <p style={{
                     fontSize: '14px',
                     color: c.textMuted,
                     lineHeight: '1.6',
-                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
                   }}>{feature.desc}</p>
                 </div>
               </div>
@@ -870,140 +877,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Impact Section */}
-      <section id="impact" style={{
-        position: 'relative',
-        padding: isMobile ? '80px 24px' : '120px 24px',
-        backgroundColor: c.bgAlt,
-        zIndex: 1
-      }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: isMobile ? '48px' : '80px',
-            alignItems: 'center'
-          }}>
-            <div style={{ flex: 1 }}>
-              <div style={{
-                display: 'inline-block',
-                padding: '10px 20px',
-                borderRadius: '100px',
-                background: `${c.primary}10`,
-                border: `1px solid ${c.primary}20`,
-                color: c.primary,
-                fontSize: '14px',
-                fontWeight: '600',
-                marginBottom: '24px',
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-              }}>
-                {t.impactBadge}
-              </div>
-              <h2 style={{
-                fontSize: isMobile ? '32px' : '44px',
-                fontWeight: '800',
-                marginBottom: '24px',
-                color: c.text,
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit',
-                lineHeight: '1.2'
-              }}>
-                {t.impactTitle}
-              </h2>
-              <p style={{
-                fontSize: isMobile ? '16px' : '18px',
-                color: c.textMuted,
-                lineHeight: '1.8',
-                marginBottom: '36px',
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-              }}>
-                {t.impactDesc}
-              </p>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-                {[
-                  { num: '3,000+', label: isRTL ? 'قصة' : 'Stories' },
-                  { num: '500+', label: isRTL ? 'مؤلف' : 'Authors' },
-                  { num: '8', label: isRTL ? 'عوالم' : 'Worlds' },
-                  { num: '95%', label: isRTL ? 'رضا' : 'Satisfaction' },
-                ].map((stat, i) => (
-                  <div key={i} style={{
-                    padding: '24px',
-                    backgroundColor: c.bgCard,
-                    borderRadius: '16px',
-                    border: `1px solid ${c.border}`,
-                    boxShadow: `0 2px 12px ${c.shadow}`
-                  }}>
-                    <div style={{
-                      fontSize: isMobile ? '28px' : '36px',
-                      fontWeight: '800',
-                      background: c.gradient,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      marginBottom: '4px'
-                    }}>{stat.num}</div>
-                    <div style={{
-                      fontSize: '14px',
-                      color: c.textMuted,
-                      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                    }}>{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{
-              flex: 1,
-              width: '100%',
-              backgroundColor: c.bgCard,
-              borderRadius: '24px',
-              padding: isMobile ? '28px' : '36px',
-              border: `1px solid ${c.border}`,
-              boxShadow: `0 4px 20px ${c.shadow}`
-            }}>
-              <h3 style={{
-                fontSize: '20px',
-                fontWeight: '700',
-                marginBottom: '24px',
-                color: c.text,
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-              }}>
-                {t.parentsSay}
-              </h3>
-              {[
-                { text: t.quote1, author: t.quote1Author },
-                { text: t.quote2, author: t.quote2Author },
-              ].map((quote, i) => (
-                <div key={i} style={{
-                  padding: '20px',
-                  backgroundColor: c.bgAlt,
-                  borderRadius: '16px',
-                  marginBottom: i < 1 ? '16px' : 0,
-                  border: `1px solid ${c.borderLight}`
-                }}>
-                  <p style={{
-                    fontSize: '15px',
-                    color: c.text,
-                    lineHeight: '1.8',
-                    marginBottom: '12px',
-                    fontStyle: 'italic',
-                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                  }}>
-                    {quote.text}
-                  </p>
-                  <p style={{
-                    fontSize: '13px',
-                    color: c.textMuted,
-                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                  }}>— {quote.author}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Investment Section with Gold accent */}
+      {/* Investment Section */}
       <section style={{
         position: 'relative',
         padding: isMobile ? '80px 24px' : '120px 24px',
@@ -1011,270 +885,155 @@ export default function Home() {
       }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <div style={{
-            background: theme === 'light'
-              ? 'linear-gradient(135deg, rgba(0,108,53,0.05), rgba(201,162,39,0.08))'
-              : 'linear-gradient(135deg, rgba(0,108,53,0.15), rgba(201,162,39,0.1))',
+            backgroundColor: c.bgCard,
             borderRadius: '32px',
             padding: isMobile ? '40px 24px' : '64px 48px',
-            border: `1px solid ${c.accent}30`,
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden'
+            border: `1px solid ${c.border}`,
+            boxShadow: `0 8px 40px ${c.shadow}`,
+            textAlign: 'center'
           }}>
-            {/* Decorative corner patterns */}
+            <Badge>
+              <TrendingUp size={16} />
+              {t.investBadge}
+            </Badge>
+            <SectionTitle>{t.investTitle}</SectionTitle>
+            <p style={{
+              fontSize: isMobile ? '17px' : '19px',
+              color: c.textMuted,
+              lineHeight: '1.8',
+              maxWidth: '700px',
+              margin: '0 auto 48px',
+              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
+            }}>
+              {t.investDesc}
+            </p>
+
             <div style={{
-              position: 'absolute',
-              top: '0',
-              right: '0',
-              width: '150px',
-              height: '150px',
-              background: `radial-gradient(circle at top right, ${c.accent}20 0%, transparent 70%)`,
-              borderRadius: '0 32px 0 0'
-            }} />
-            <div style={{
-              position: 'absolute',
-              bottom: '0',
-              left: '0',
-              width: '150px',
-              height: '150px',
-              background: `radial-gradient(circle at bottom left, ${c.primary}15 0%, transparent 70%)`,
-              borderRadius: '0 0 0 32px'
-            }} />
-
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{
-                display: 'inline-block',
-                padding: '10px 20px',
-                borderRadius: '100px',
-                background: `${c.accent}20`,
-                border: `1px solid ${c.accent}40`,
-                color: theme === 'light' ? '#8B6914' : c.accent,
-                fontSize: '14px',
-                fontWeight: '600',
-                marginBottom: '24px',
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-              }}>
-                💎 {t.investBadge}
-              </div>
-
-              <h2 style={{
-                fontSize: isMobile ? '28px' : '40px',
-                fontWeight: '800',
-                marginBottom: '20px',
-                color: c.text,
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit',
-                lineHeight: '1.2'
-              }}>
-                {t.investTitle}
-              </h2>
-
-              <p style={{
-                fontSize: isMobile ? '16px' : '18px',
-                color: c.textMuted,
-                lineHeight: '1.8',
-                maxWidth: '700px',
-                margin: '0 auto 40px',
-                fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-              }}>
-                {t.investDesc}
-              </p>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-                gap: '24px',
-                marginBottom: '40px'
-              }}>
-                {[
-                  { num: t.marketSize, label: t.marketLabel },
-                  { num: t.growthRate, label: t.growthLabel },
-                  { num: t.targetUsers, label: t.targetLabel },
-                ].map((item, i) => (
-                  <div key={i} style={{
-                    padding: '24px',
-                    backgroundColor: c.bgCard,
-                    borderRadius: '16px',
-                    border: `1px solid ${c.border}`,
-                    boxShadow: `0 2px 12px ${c.shadow}`
-                  }}>
-                    <div style={{
-                      fontSize: isMobile ? '32px' : '40px',
-                      fontWeight: '800',
-                      color: theme === 'light' ? '#8B6914' : c.accent,
-                      marginBottom: '8px'
-                    }}>{item.num}</div>
-                    <div style={{
-                      fontSize: '14px',
-                      color: c.textMuted,
-                      fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                    }}>{item.label}</div>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                style={{
-                  padding: '18px 40px',
-                  fontSize: '17px',
-                  fontWeight: '700',
-                  color: theme === 'light' ? '#fff' : '#000',
-                  background: c.gradientGold,
-                  border: 'none',
-                  borderRadius: '14px',
-                  cursor: 'pointer',
-                  boxShadow: `0 8px 32px ${c.accent}30`,
-                  fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-                }}
-              >
-                {t.learnMore} →
-              </button>
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+              gap: '32px',
+              marginBottom: '48px'
+            }}>
+              {[
+                { value: t.marketSize, label: t.marketLabel, icon: Building },
+                { value: t.growthRate, label: t.growthLabel, icon: TrendingUp },
+                { value: t.targetUsers, label: t.targetLabel, icon: Users },
+              ].map((stat, i) => (
+                <div key={i} style={{
+                  padding: '28px',
+                  backgroundColor: c.bgAlt,
+                  borderRadius: '16px',
+                  border: `1px solid ${c.border}`
+                }}>
+                  <stat.icon size={24} style={{ color: c.primary, marginBottom: '12px' }} />
+                  <div style={{
+                    fontSize: '32px',
+                    fontWeight: '800',
+                    color: c.primary,
+                    marginBottom: '8px'
+                  }}>{stat.value}</div>
+                  <div style={{
+                    fontSize: '14px',
+                    color: c.textMuted,
+                    fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
+                  }}>{stat.label}</div>
+                </div>
+              ))}
             </div>
+
+            <a href="mailto:invest@rawy.ai" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '18px 36px',
+              background: c.gradient,
+              color: '#fff',
+              borderRadius: '14px',
+              textDecoration: 'none',
+              fontWeight: '700',
+              fontSize: '17px',
+              boxShadow: `0 8px 32px ${c.primary}30`,
+              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
+            }}>
+              {t.learnMore}
+              <ArrowRight size={20} />
+            </a>
           </div>
         </div>
       </section>
 
-      {/* CTA Section with Saudi Green */}
+      {/* CTA Section */}
       <section style={{
         position: 'relative',
         padding: isMobile ? '80px 24px' : '120px 24px',
-        background: c.gradient,
-        textAlign: 'center',
+        backgroundColor: c.bgAlt,
         zIndex: 1
       }}>
-        <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-          <h2 style={{
-            fontSize: isMobile ? '32px' : '48px',
-            fontWeight: '800',
-            color: '#fff',
-            marginBottom: '20px',
-            fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit',
-            lineHeight: '1.2'
-          }}>
-            {t.ctaTitle}
-          </h2>
+        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+          <SectionTitle>{t.ctaTitle}</SectionTitle>
           <p style={{
-            fontSize: isMobile ? '16px' : '19px',
-            color: 'rgba(255,255,255,0.9)',
+            fontSize: isMobile ? '17px' : '19px',
+            color: c.textMuted,
+            lineHeight: '1.8',
             marginBottom: '40px',
-            lineHeight: '1.7',
-            fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+            fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif'
           }}>
             {t.ctaDesc}
           </p>
+
           <button
             onClick={handleGetStarted}
             style={{
               padding: '20px 48px',
               fontSize: '18px',
               fontWeight: '700',
-              color: c.primary,
-              backgroundColor: '#fff',
+              color: '#fff',
+              background: c.gradient,
               border: 'none',
-              borderRadius: '14px',
+              borderRadius: '16px',
               cursor: 'pointer',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
+              boxShadow: `0 8px 32px ${c.primary}30`,
+              marginBottom: '32px',
+              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '12px'
             }}
           >
-            {t.ctaButton} →
+            <Sparkles size={20} />
+            {t.ctaButton}
           </button>
-          <p style={{
-            color: 'rgba(255,255,255,0.85)',
-            marginTop: '20px',
-            fontSize: '14px',
-            fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-          }}>
-            {t.ctaNote}
-          </p>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer style={{
-        position: 'relative',
-        padding: isMobile ? '40px 24px' : '60px 24px',
-        backgroundColor: theme === 'light' ? '#F5F0E6' : '#050805',
-        borderTop: `1px solid ${c.border}`,
-        zIndex: 1
-      }}>
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '24px',
-          textAlign: isMobile ? 'center' : 'left'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              background: c.gradient,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: '18px'
-            }}>R</div>
-            <span style={{
-              fontSize: '22px',
-              fontWeight: '700',
-              color: c.text,
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-            }}>{isRTL ? 'راوي' : 'Rawy'}</span>
-          </div>
 
           <div style={{
             display: 'flex',
-            gap: isMobile ? '20px' : '32px',
-            flexWrap: 'wrap',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            gap: '24px',
+            flexWrap: 'wrap'
           }}>
-            <a href="#" style={{
-              color: c.textMuted,
-              textDecoration: 'none',
-              fontSize: '14px',
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-            }}>{t.privacy}</a>
-            <a href="#" style={{
-              color: c.textMuted,
-              textDecoration: 'none',
-              fontSize: '14px',
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-            }}>{t.terms}</a>
-            <a href="#" style={{
-              color: c.textMuted,
-              textDecoration: 'none',
-              fontSize: '14px',
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-            }}>{t.contact}</a>
-          </div>
-
-          <div style={{ textAlign: isMobile ? 'center' : 'right' }}>
-            <p style={{
-              color: c.primary,
-              fontSize: '13px',
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit',
-              marginBottom: '4px',
-              fontWeight: '500'
-            }}>{t.madeIn}</p>
-            <p style={{
-              color: c.textLight,
-              fontSize: '12px',
-              fontFamily: isRTL ? 'Tajawal, sans-serif' : 'inherit'
-            }}>{t.copyright}</p>
+            {[t.ctaNote1, t.ctaNote2, t.ctaNote3].map((note, i) => (
+              <div key={i} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                color: c.textMuted,
+                fontSize: '14px'
+              }}>
+                <Check size={16} style={{ color: c.primary }} />
+                <span style={{ fontFamily: isRTL ? 'Tajawal, sans-serif' : 'Inter, sans-serif' }}>{note}</span>
+              </div>
+            ))}
           </div>
         </div>
-      </footer>
+      </section>
+
+      <Footer theme={theme} lang={lang} onThemeChange={setTheme} />
 
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         onSuccess={handleAuthSuccess}
+        lang={lang}
+        theme={theme}
       />
     </div>
   );
