@@ -400,9 +400,7 @@ export default function DemoPage() {
     const powers = getPowers(lang);
 
     const worldText = worlds.find(x => x.id === config.world)?.label || '';
-    const worldEmoji = worlds.find(x => x.id === config.world)?.emoji || '🏜️';
     const companionText = companions.find(x => x.id === config.companion)?.label || '';
-    const companionEmoji = companions.find(x => x.id === config.companion)?.emoji || '🤖';
     const powerText = powers.find(x => x.id === config.power)?.label || '';
 
     const heroPronouns = config.gender === 'female'
@@ -411,20 +409,20 @@ export default function DemoPage() {
 
     if (lang === 'ar') {
       const scenesAr = [
-        `${worldEmoji} في قلب ${worldText}، وقف ${config.heroName} أمام تحدٍ لم يواجهه من قبل. بجانبه ${companionText} ${companionEmoji}، رفيق دربه الوفي.\n\n"هل أنت مستعد؟" سأله رفيقه.\n\n${config.customPrompt ? `${config.customPrompt}\n\n` : ''}نظر ${config.heroName} إلى الأفق. كانت ${powerText} التي يملكها ستكون مفتاح هذه المغامرة...`,
+        `في قلب ${worldText}، وقف ${config.heroName} أمام تحدٍ لم يواجهه من قبل. بجانبه ${companionText}، رفيق دربه الوفي.\n\n"هل أنت مستعد؟" سأله رفيقه.\n\n${config.customPrompt ? `${config.customPrompt}\n\n` : ''}نظر ${config.heroName} إلى الأفق. كانت ${powerText} التي يملكها ستكون مفتاح هذه المغامرة...`,
         `فجأة، سمع ${config.heroName} صوتاً غريباً من الأعماق. صوت كأنه يناديه بالاسم...\n\n"${config.heroName}... ${config.heroName}..."\n\nالتفت بسرعة، قلبه ينبض بقوة!`,
         `ظهر باب عملاق منقوش عليه رموز قديمة، يتوهج بنور أزرق غامض.\n\n"هذا هو!" صرخ ${companionText}. "هذا ما كنا نبحث عنه!"`,
         `${tweak ? tweak + '\n\n' : ''}استخدم ${config.heroName} قوة ${powerText} لمواجهة الخطر. كان ${companionText} بجانبه يساعده في كل خطوة.`,
-        `وصل ${config.heroName} و${companionText} إلى نهاية الطريق. أمامهم اختياران:\n\n⬅️ الطريق الأيسر: مظلم وغامض\n➡️ الطريق الأيمن: مضيء لكن خطير\n\nماذا سيختار ${config.heroName}؟ 🎭`,
+        `وصل ${config.heroName} و${companionText} إلى نهاية الطريق. أمامهم اختياران:\n\n- الطريق الأيسر: مظلم وغامض\n- الطريق الأيمن: مضيء لكن خطير\n\nماذا سيختار ${config.heroName}؟`,
       ];
       return scenesAr[Math.min(sceneNumber - 1, scenesAr.length - 1)];
     } else {
       const scenesEn = [
-        `${worldEmoji} In the heart of ${worldText}, ${config.heroName} stood facing a challenge ${heroPronouns.subj} had never faced before. Beside ${heroPronouns.obj} was ${companionText} ${companionEmoji}, ${heroPronouns.poss} loyal companion.\n\n"Are you ready?" ${heroPronouns.poss} companion asked.\n\n${config.customPrompt ? `${config.customPrompt}\n\n` : ''}${config.heroName} looked at the horizon, knowing ${heroPronouns.poss} ${powerText} would be the key...`,
+        `In the heart of ${worldText}, ${config.heroName} stood facing a challenge ${heroPronouns.subj} had never faced before. Beside ${heroPronouns.obj} was ${companionText}, ${heroPronouns.poss} loyal companion.\n\n"Are you ready?" ${heroPronouns.poss} companion asked.\n\n${config.customPrompt ? `${config.customPrompt}\n\n` : ''}${config.heroName} looked at the horizon, knowing ${heroPronouns.poss} ${powerText} would be the key...`,
         `Suddenly, ${config.heroName} heard a strange sound from the depths. A voice calling ${heroPronouns.poss} name...\n\n"${config.heroName}... ${config.heroName}..."\n\n${heroPronouns.subj.charAt(0).toUpperCase() + heroPronouns.subj.slice(1)} turned quickly, heart pounding!`,
         `A giant door appeared, carved with ancient symbols, glowing with a mysterious blue light.\n\n"This is it!" shouted ${companionText}. "This is what we've been looking for!"`,
         `${tweak ? tweak + '\n\n' : ''}${config.heroName} used ${heroPronouns.poss} ${powerText} to face the danger. ${companionText} was by ${heroPronouns.poss} side, helping at every step.`,
-        `${config.heroName} and ${companionText} reached the end of the path. Before them were two choices:\n\n⬅️ The left path: Dark and mysterious\n➡️ The right path: Bright but dangerous\n\nWhat will ${config.heroName} choose? 🎭`,
+        `${config.heroName} and ${companionText} reached the end of the path. Before them were two choices:\n\n- The left path: Dark and mysterious\n- The right path: Bright but dangerous\n\nWhat will ${config.heroName} choose?`,
       ];
       return scenesEn[Math.min(sceneNumber - 1, scenesEn.length - 1)];
     }
@@ -722,10 +720,12 @@ export default function DemoPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '24px',
                         flexShrink: 0
                       }}>
-                        {levelConfig.emoji}
+                        {(() => {
+                          const IconComponent = iconMap[levelConfig.icon];
+                          return IconComponent ? <IconComponent size={24} style={{ color: isSelected ? c.primary : c.textMuted }} /> : null;
+                        })()}
                       </div>
                       <div>
                         <div style={{

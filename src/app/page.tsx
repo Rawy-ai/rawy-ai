@@ -1032,8 +1032,6 @@ export default function Home() {
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         onSuccess={handleAuthSuccess}
-        lang={lang}
-        theme={theme}
       />
     </div>
   );
